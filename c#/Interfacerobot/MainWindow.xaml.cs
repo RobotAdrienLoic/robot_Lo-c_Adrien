@@ -19,6 +19,7 @@ using MouseKeyboardActivityMonitor.WinApi;
 using MouseKeyboardActivityMonitor;
 using System.Windows.Forms;
 using Utilities;
+using SciChart.Charting.Visuals;
 
 namespace Interfacerobot
 {
@@ -33,6 +34,8 @@ namespace Interfacerobot
         int i;
         public MainWindow()
         {
+            // Set this code once in App.xaml.cs or application startup
+            SciChartSurface.SetRuntimeLicenseKey("1A1VKrxdPNwYSgOimkTcwnomSYGyup+XohhyGusuhfUB5xGgZGMP1OZsLsIXS4Ep2tjbrdXpBcYYMdJ0pFBcCh0+s7IrrB7yvmnWbq2Cac+OpBsKgSn7Jg0Pmcew8opzoF+OYGjdsurmQvf86Z+zqmWV0zswF1hw9+871xp3+FP0/5sM5cwtDQROlQip/+QX7clJBNxs0epBpiXjhNaCCCx8oHYv/zA0/0uRR9OvSqjpNAOfZgdA+JKrCS/syOecWlK2WJas1G8bttFhGSci1jiJzIkkckuCB0wUZQkza81IJKvtl9BVwF740dBdKowNnHaxHG8Xqj3GDb80sNUuEz6pzRI/uuMPlp7j9qdSfXXXUfxLDE0Zu2kS8Fnwe2PQCWXZE/WZoJfxWfNUGAkv1Np3M4huFlSpupERH4y8oupclzE+JqGa6vQJqrtUr77JSsiJJnOIU5TB1TVFHsxQIFGQ41iXXwT5soq3tgJSontOfZOOhlXCTBgRolvC+5ZR3w==");
             InitializeComponent();
             serialPort1 = new ReliableSerialPort("COM3", 115200, Parity.None, 8, StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -325,7 +328,6 @@ namespace Interfacerobot
                     angleRD.Text = (angleRadian*180/Math.PI).ToString();
                     vLineaire.Text = (vitesseLineaire).ToString();
                     vAngulaire.Text = (vitesseAngulaire).ToString();
-
                     break;
 
                         

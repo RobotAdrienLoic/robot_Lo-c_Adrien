@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:WpfAsservDisplay="clr-namespace:WpfAsservissementDisplay;assembly=WpfAsservissementDisplay"
+        xmlns:oscillo="clr-namespace:WpfOscilloscopeControl;assembly=WpfOscilloscopeControl"        
         xmlns:local="clr-namespace:Interfacerobot"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800" Background="Black">
@@ -65,6 +66,8 @@
             <CheckBox x:Name="CheckBoxLed3" Content="Led 3" Foreground="Black" Height="15" Width="50" Margin="0" />
         </StackPanel>
 
+        <oscillo:WpfOscilloscope x:Name="oscilloSpeed"/>
+        
         <GroupBox x:Name="Odométrie" Header="Odométrie" Background="LightGray" Foreground="Black" Grid.ColumnSpan="3"   BorderBrush="Black" Grid.Row="6" Grid.Column="1" >
             <StackPanel>
                 <Grid Grid.Row="6" Background="LightGray" Grid.Column="1">

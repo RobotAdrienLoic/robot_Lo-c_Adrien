@@ -5,12 +5,12 @@ Tool Name:
 
 Command:
   -p33EP512GM306 \
-  --mdfp=C:/Users/TABLE 6/.mchp_packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.3.85/xc16 \
+  --mdfp=C:/Program Files/Microchip/MPLABX/v5.50/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.3.85/xc16 \
   -o \
   dist/default/production/Robot-Guinedor-Wemaere.X.production.elf \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/.. \
-  -LC:/Users/TABLE 6/.mchp_packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.3.85/xc16/bin/../support/PIC24E/gld \
-  -LC:/Users/TABLE 6/.mchp_packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.3.85/xc16/bin/../support/dsPIC33E/gld \
+  -LC:/Program Files/Microchip/MPLABX/v5.50/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.3.85/xc16/bin/../support/PIC24E/gld \
+  -LC:/Program Files/Microchip/MPLABX/v5.50/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.3.85/xc16/bin/../support/dsPIC33E/gld \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../lib \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../support/PIC24E/gld \
   -Lc:/program files/microchip/xc16/v1.60/bin/bin/../../support/PIC24F/gld \
@@ -630,7 +630,7 @@ __FOSCSEL
 
 __FGS             0x0557fa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x0557fa          0x2 /CW/_FGS
+ __FGS.sec        0x0557fa          0x2 /CW/_FGS@±9
                   0x0557fa                  __FGS.sec
 
 __FUID0
@@ -648,23 +648,23 @@ __FUID3
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x864f
+.debug_info       0x000000       0x8613
  *(.debug_info)
- .debug_info      0x000000        0x93c build/default/production/main.o
- .debug_info      0x00093c        0x544 build/default/production/ChipConfig.o
- .debug_info      0x000e80        0xd69 build/default/production/IO.o
- .debug_info      0x001be9       0x11f1 build/default/production/timer.o
- .debug_info      0x002dda        0x3cf build/default/production/robot.o
- .debug_info      0x0031a9        0x216 build/default/production/toolbox.o
- .debug_info      0x0033bf        0xf90 build/default/production/PWM.o
- .debug_info      0x00434f       0x13ed build/default/production/ADC.o
- .debug_info      0x00573c        0x478 build/default/production/etat.o
- .debug_info      0x005bb4        0x4fb build/default/production/CB_TX1.o
- .debug_info      0x0060af        0x63a build/default/production/CB_RX1.o
- .debug_info      0x0066e9        0x88c build/default/production/UART.o
- .debug_info      0x006f75        0x691 build/default/production/UART_Protocol.o
- .debug_info      0x007606        0xbd6 build/default/production/QEI.o
- .debug_info      0x0081dc        0x473 build/default/production/Utilities.o
+ .debug_info      0x000000        0x938 build/default/production/main.o
+ .debug_info      0x000938        0x540 build/default/production/ChipConfig.o
+ .debug_info      0x000e78        0xd65 build/default/production/IO.o
+ .debug_info      0x001bdd       0x11ed build/default/production/timer.o
+ .debug_info      0x002dca        0x3cb build/default/production/robot.o
+ .debug_info      0x003195        0x212 build/default/production/toolbox.o
+ .debug_info      0x0033a7        0xf8c build/default/production/PWM.o
+ .debug_info      0x004333       0x13e9 build/default/production/ADC.o
+ .debug_info      0x00571c        0x474 build/default/production/etat.o
+ .debug_info      0x005b90        0x4f7 build/default/production/CB_TX1.o
+ .debug_info      0x006087        0x636 build/default/production/CB_RX1.o
+ .debug_info      0x0066bd        0x888 build/default/production/UART.o
+ .debug_info      0x006f45        0x68d build/default/production/UART_Protocol.o
+ .debug_info      0x0075d2        0xbd2 build/default/production/QEI.o
+ .debug_info      0x0081a4        0x46f build/default/production/Utilities.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0xfee
@@ -685,23 +685,23 @@ __FUID3
  .debug_abbrev    0x000de6        0x15f build/default/production/QEI.o
  .debug_abbrev    0x000f45         0xa9 build/default/production/Utilities.o
 
-.debug_line       0x000000        0xfe6
+.debug_line       0x000000       0x10a1
  *(.debug_line)
- .debug_line      0x000000        0x201 build/default/production/main.o
- .debug_line      0x000201        0x10d build/default/production/ChipConfig.o
- .debug_line      0x00030e        0x110 build/default/production/IO.o
- .debug_line      0x00041e        0x17e build/default/production/timer.o
- .debug_line      0x00059c         0x30 build/default/production/robot.o
- .debug_line      0x0005cc         0x54 build/default/production/toolbox.o
- .debug_line      0x000620        0x141 build/default/production/PWM.o
- .debug_line      0x000761        0x142 build/default/production/ADC.o
- .debug_line      0x0008a3         0x75 build/default/production/etat.o
- .debug_line      0x000918        0x13b build/default/production/CB_TX1.o
- .debug_line      0x000a53        0x134 build/default/production/CB_RX1.o
- .debug_line      0x000b87        0x114 build/default/production/UART.o
- .debug_line      0x000c9b        0x171 build/default/production/UART_Protocol.o
- .debug_line      0x000e0c        0x166 build/default/production/QEI.o
- .debug_line      0x000f72         0x74 build/default/production/Utilities.o
+ .debug_line      0x000000        0x212 build/default/production/main.o
+ .debug_line      0x000212        0x11e build/default/production/ChipConfig.o
+ .debug_line      0x000330        0x121 build/default/production/IO.o
+ .debug_line      0x000451        0x18f build/default/production/timer.o
+ .debug_line      0x0005e0         0x30 build/default/production/robot.o
+ .debug_line      0x000610         0x54 build/default/production/toolbox.o
+ .debug_line      0x000664        0x152 build/default/production/PWM.o
+ .debug_line      0x0007b6        0x153 build/default/production/ADC.o
+ .debug_line      0x000909         0x75 build/default/production/etat.o
+ .debug_line      0x00097e        0x14c build/default/production/CB_TX1.o
+ .debug_line      0x000aca        0x145 build/default/production/CB_RX1.o
+ .debug_line      0x000c0f        0x125 build/default/production/UART.o
+ .debug_line      0x000d34        0x182 build/default/production/UART_Protocol.o
+ .debug_line      0x000eb6        0x177 build/default/production/QEI.o
+ .debug_line      0x00102d         0x74 build/default/production/Utilities.o
 
 .debug_frame      0x000000        0x8e8
  *(.debug_frame)
@@ -2641,7 +2641,7 @@ LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files/microchip/xc16/v1.60/bin/bin/../../lib\liblega-c-elf.a
 END GROUP
 OUTPUT(dist/default/production/Robot-Guinedor-Wemaere.X.production.elf elf32-pic30)
-LOAD /CW/_FGS
+LOAD /CW/_FGS@±9
 LOAD default_isr
 LOAD data_init
 

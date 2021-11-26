@@ -38,6 +38,18 @@
     <Reference Include="MouseKeyboardActivityMonitor">
       <HintPath>..\..\..\..\..\..\Bureau\robots\Partie2-C#\MouseKeyboardActivityMonitor.dll</HintPath>
     </Reference>
+    <Reference Include="SciChart.Charting, Version=6.3.0.13476, Culture=neutral, PublicKeyToken=b55dd9efe817e823, processorArchitecture=MSIL">
+      <HintPath>packages\SciChart.6.3.0.13476\lib\net452\SciChart.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="SciChart.Core, Version=6.3.0.13476, Culture=neutral, PublicKeyToken=b55dd9efe817e823, processorArchitecture=MSIL">
+      <HintPath>packages\SciChart.6.3.0.13476\lib\net452\SciChart.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SciChart.Data, Version=6.3.0.13476, Culture=neutral, PublicKeyToken=b55dd9efe817e823, processorArchitecture=MSIL">
+      <HintPath>packages\SciChart.6.3.0.13476\lib\net452\SciChart.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="SciChart.Drawing, Version=6.3.0.13476, Culture=neutral, PublicKeyToken=b55dd9efe817e823, processorArchitecture=MSIL">
+      <HintPath>packages\SciChart.6.3.0.13476\lib\net452\SciChart.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -91,6 +103,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -114,6 +127,10 @@
     <ProjectReference Include="..\WpfAsservissementDisplay\WpfAsservissementDisplay.csproj">
       <Project>{f0a887e9-d0a2-47e3-994a-94a0dcae8d4f}</Project>
       <Name>WpfAsservissementDisplay</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WpfOscilloscope\WpfOscilloscopeControl.csproj">
+      <Project>{88baa407-3fea-4f4b-bb41-5309ce48884e}</Project>
+      <Name>WpfOscilloscopeControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

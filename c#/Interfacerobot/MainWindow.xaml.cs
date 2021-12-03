@@ -21,6 +21,8 @@ using System.Windows.Forms;
 using Utilities;
 using SciChart.Charting.Visuals;
 
+
+
 namespace Interfacerobot
 {
     public partial class MainWindow : Window
@@ -32,6 +34,9 @@ namespace Interfacerobot
         private readonly KeyboardHookListener m_KeyboardHookManager;
 
         int i;
+        float PositionEnX;
+        float PositionEnY;
+
         public MainWindow()
         {
             // Set this code once in App.xaml.cs or application startup
@@ -47,7 +52,12 @@ namespace Interfacerobot
             timerAffichage.Start();
             m_KeyboardHookManager = new KeyboardHookListener(new GlobalHooker());
             m_KeyboardHookManager.Enabled = true;
-            m_KeyboardHookManager.KeyDown += HookManager_KeyDown;    
+            m_KeyboardHookManager.KeyDown += HookManager_KeyDown;
+            oscilloSpeed.AddOrUpdateLine(50, 200, "PosX");
+            oscilloSpeed.ChangeLineColor(50, Colors.Red);
+            oscilloSpeed.AddOrUpdateLine(52, 200, "PosY");
+            oscilloSpeed.ChangeLineColor(52, Colors.Blue);
+
         }
 
 
@@ -108,6 +118,7 @@ namespace Interfacerobot
             RobotState=0x0050,
             Clavier=0x0053,
             Odometrie=0x0061,
+            Oscillo=0x0083,
         }
 
         public enum StateRobot
@@ -309,28 +320,35 @@ namespace Interfacerobot
 
                 case Functions.RobotState:
                     int instant = (((int)msgPayload[1]) << 24) + (((int)msgPayload[2]) << 16) + (((int)msgPayload[3]) << 8) + (((int)msgPayload[4]));
-                    RtbReception.Text = ((StateRobot)(msgPayload[0])).ToString() + "\n\rTemps: " + instant.ToString() + " ms";
+                    //RtbReception.Text = ((StateRobot)(msgPayload[0])).ToString() + "\n\rTemps: " + instant.ToString() + " ms";
                 break;
 
                 case Functions.Odometrie:
                     byte[] tab = msgPayload.GetRange(4, 4);
                     xpos = tab.GetFloat();
+                    PositionEnX = xpos;
                     tab = msgPayload.GetRange(8, 4);
                     ypos = tab.GetFloat();
+                    PositionEnY = ypos;
                     tab = msgPayload.GetRange(12, 4);
                     angleRadian = tab.GetFloat();
                     tab = msgPayload.GetRange(16, 4);
                     vitesseLineaire = tab.GetFloat();
                     tab = msgPayload.GetRange(20, 4);
                     vitesseAngulaire = tab.GetFloat();
-                    xPos.Text = (xpos).ToString();
-                    yPos.Text = (ypos).ToString();
-                    angleRD.Text = (angleRadian*180/Math.PI).ToString();
-                    vLineaire.Text = (vitesseLineaire).ToString();
-                    vAngulaire.Text = (vitesseAngulaire).ToString();
+                    xPos.Text = "Position en X : " + (xpos).ToString();
+                    yPos.Text = "Position en Y : " + (ypos).ToString();
+                    angleRD.Text = "Angle en radian : " + (angleRadian*180/Math.PI).ToString();
+                    vLineaire.Text = "Vitesse linéaire : " + (vitesseLineaire).ToString();
+                    vAngulaire.Text = "Vitesse angulaire : " + (vitesseAngulaire).ToString();
                     break;
 
-                        
+                case Functions.Oscillo:
+                    int temps = (((int)msgPayload[0]) << 24) + (((int)msgPayload[1]) << 16) + (((int)msgPayload[2]) << 8) + (((int)msgPayload[3]));
+                    oscilloSpeed.AddPointToLine(50, temps, PositionEnX);
+                    oscilloSpeed.AddPointToLine(52, temps, PositionEnY);
+                    //RtbReception.Text = ((StateRobot)(msgPayload[0])).ToString() + "\n\rTemps: " + instant.ToString() + " ms";
+                    break;
 
             }
         }
@@ -344,23 +362,23 @@ namespace Interfacerobot
                 {
                     case Keys.Left:
                         UartEncodeAndSendMessage(0x0051,1,new byte[] { (byte)StateRobot.STATE_TOURNE_SUR_PLACE_GAUCHE });
-                        textBoxClavier.Text = "Gauche";
+                        //textBoxClavier.Text = "Gauche";
                         break;
                     case Keys.Right:
                         UartEncodeAndSendMessage(0x0051, 1, new byte[] { (byte)StateRobot.STATE_TOURNE_SUR_PLACE_DROITE });
-                        textBoxClavier.Text = "Droite";
+                        //textBoxClavier.Text = "Droite";
                         break;
                     case Keys.Up:
                         UartEncodeAndSendMessage(0x0051, 1, new byte[] { (byte)StateRobot.STATE_AVANCE });
-                        textBoxClavier.Text = "Avance";
+                        //textBoxClavier.Text = "Avance";
                         break;
                     case Keys.Down:
                         UartEncodeAndSendMessage(0x0051, 1, new byte[] { (byte)StateRobot.STATE_RECULE });
-                        textBoxClavier.Text = "Recule";
+                        //textBoxClavier.Text = "Recule";
                         break;
                     case Keys.PageDown:
                         UartEncodeAndSendMessage(0x0051, 1, new byte[] { (byte)StateRobot.STATE_ARRET });
-                        textBoxClavier.Text = "Arret";
+                        //textBoxClavier.Text = "Arret";
                         break;
                 }
             }
@@ -428,7 +446,7 @@ namespace Interfacerobot
                 autoControlActivated = false;
                 compteur_etat = true;
                 UartEncodeAndSendMessage(0x0052, 1, new byte[] {1});
-                textBoxClavier.Text = "";
+                //textBoxClavier.Text = "";
             }
             else
             {         

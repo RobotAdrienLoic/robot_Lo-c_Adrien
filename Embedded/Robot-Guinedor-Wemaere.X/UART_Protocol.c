@@ -5,6 +5,8 @@
 #include "UART.h"
 #include "main.h"
 #include "IO.h"
+#include "Asservissement.h"
+#include "QEI.h"
 
 int msgDecodedFunction = 0;
 int msgDecodedPayloadLength = 0;
@@ -136,6 +138,8 @@ void UartDecodeMessage(unsigned char c)
     }
 }
 
+double model, Kp, Ki, Kd, KpMax, KiMax, KdMax;
+        
 void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLength, unsigned char * payload)
 {
     switch(function)
@@ -154,7 +158,21 @@ void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLengt
         break;
         
         case ASSERVISSEMENT: 
-              
+            model = getDouble(payload, 0);
+            Kp = getDouble(payload, 4);
+            Ki = getDouble(payload, 8);
+            Kd = getDouble(payload, 12);
+            KpMax = getDouble(payload, 16);
+            KiMax = getDouble(payload, 20);
+            KdMax = getDouble(payload, 24);
+            
+            if (model == 1) {
+                SetupPidAsservissement(&PidX, Kp, Ki, Kd, KpMax, KiMax, KdMax);
+            } 
+            else if (model == 0) {
+                SetupPidAsservissement(&PidTheta, Kp, Ki, Kd, KpMax, KiMax, KdMax);
+            }
+            
         break;
     }
 }

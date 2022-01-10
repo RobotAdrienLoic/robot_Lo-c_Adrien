@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "CB_RX1.h"
 
-#define CBRX1_BUFFER_SIZE 128
+#define CBRX1_BUFFER_SIZE 1024
 
 
 
@@ -15,21 +15,17 @@ void CB_RX1_Add(unsigned char value)
 {
     if (CB_RX1_GetRemainingSize() > 0) 
     {
-       cbRx1Buffer[cbRx1Head] = value;
-    if(cbRx1Head >= 127)
+       cbRx1Buffer[cbRx1Head++] = value;
+    if(cbRx1Head >= CBRX1_BUFFER_SIZE)
         cbRx1Head=0;
-    else 
-        cbRx1Head += 1;
     }
 }
 
 unsigned char CB_RX1_Get(void) 
 {
-    unsigned char value = cbRx1Buffer[cbRx1Tail];
-    if (cbRx1Tail >= 127)
+    unsigned char value = cbRx1Buffer[cbRx1Tail++];
+    if (cbRx1Tail >= CBRX1_BUFFER_SIZE)
         cbRx1Tail=0;
-    else 
-        cbRx1Tail+=1;
     return value;
 }
 

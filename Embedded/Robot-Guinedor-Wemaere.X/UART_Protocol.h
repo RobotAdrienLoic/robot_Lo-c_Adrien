@@ -12,6 +12,7 @@ unsigned char UartCalculateChecksum(int msgFunction,int msgPayloadLength, unsign
 void UartEncodeAndSendMessage(int msgFunction,int msgPayloadLength, unsigned char* msgPayload);
 void UartDecodeMessage(unsigned char c);
 void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLength, unsigned char* payload);
+
 extern int reset;
 
 #endif	/* UART_PROTOCOLE_H */

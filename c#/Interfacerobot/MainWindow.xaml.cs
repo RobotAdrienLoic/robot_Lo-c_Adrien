@@ -117,7 +117,7 @@ namespace Interfacerobot
             RobotState=0x0050,
             Clavier=0x0053,
             Odometrie=0x0061,
-            Asservissement=0x0063
+            Asservissement=0x0075
         }
 
         public enum StateRobot
@@ -309,13 +309,13 @@ namespace Interfacerobot
                     IRDroite = msgPayload[0];
                     IRCentre = msgPayload[1];
                     IRGauche = msgPayload[2];
-                    TextBoxTelemetres.Text = "IR Gauche:" + IRGauche.ToString() + "cm\n\r" + "IR Centre:" + IRCentre.ToString() + "cm\n\r" + "IR Droite:" + IRDroite.ToString() + "cm";
+                    TextBoxTelemetres.Text = "IR Gauche:" + IRGauche.ToString() + "cm\n" + "IR Centre:" + IRCentre.ToString() + "cm\n" + "IR Droite:" + IRDroite.ToString() + "cm";
                 break;
 
                 case Functions.moteurs:
                     MG = msgPayload[0];
                     MD = msgPayload[1];
-                    TextBoxMoteurs.Text = "Vitesse Gauche:" + MG.ToString() + "%\n\r" + "Vitesse Droite:" + MD.ToString() + "%\n\r";
+                    TextBoxMoteurs.Text = "Vitesse Gauche:" + MG.ToString() + "%\n" + "Vitesse Droite:" + MD.ToString() + "%\n";
                 break;
 
                 case Functions.message:

@@ -25,6 +25,7 @@ typedef struct _PidCorrector
 
 extern PidCorrector PidX;
 extern PidCorrector PidTheta;
+void SetupPidAsservissement (volatile PidCorrector* PidCorr, double Kp, double Ki, double Kd, double proportionelleMax, double integralMax, double deriveeMax);
 
 //void SetupPidAsservissement(volatile PidCorrector* PidCorr, double Kp, double Ki , double Kd, double proportionelleMax, double integralMax, double deriveeMax);
 void AsservissementValeur();

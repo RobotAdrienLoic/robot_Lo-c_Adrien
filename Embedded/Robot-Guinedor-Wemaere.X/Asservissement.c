@@ -13,18 +13,8 @@
 PidCorrector PidX;
 PidCorrector PidTheta;
 
-void SetupPidAsservissement (volatile PidCorrector* PidCorr, double Kp, double Ki, double Kd, double proportionelleMax, double integralMax, double deriveeMax)
-{
-PidCorr -> Kp = Kp;
-PidCorr -> erreurProportionelleMax = proportionelleMax ; // on limie la correction due au Kp
-PidCorr -> Ki = Ki ;
-PidCorr -> erreurIntegraleMax = integralMax ; // on limite la correction due au Ki
-PidCorr -> Kd = Kd;
-PidCorr -> erreurDeriveeMax = deriveeMax ;
-}
-
 unsigned char asservissementPayload [104];
-    
+
 double consigneX =0;
 double consigneTheta = 0;                    
 double valueX =0;
@@ -55,6 +45,16 @@ double corrLimitITheta = 0;
 double corrLimitDX = 0;
 double corrLimitDTheta = 0;
 
+void SetupPidAsservissement (volatile PidCorrector* PidCorr, double Kp, double Ki, double Kd, double proportionelleMax, double integralMax, double deriveeMax)
+{
+PidCorr -> Kp = Kp;
+PidCorr -> erreurProportionelleMax = proportionelleMax ; // on limie la correction due au Kp
+PidCorr -> Ki = Ki ;
+PidCorr -> erreurIntegraleMax = integralMax ; // on limite la correction due au Ki
+PidCorr -> Kd = Kd;
+PidCorr -> erreurDeriveeMax = deriveeMax ;
+}
+
 void AsservissementValeur(){
     //-------------------
     int nb_octet = 0;
@@ -74,14 +74,14 @@ void AsservissementValeur(){
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrDX));
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrDTheta));
     //-------------------
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KpX)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KpTheta));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KiX));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KiTheta));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KdX)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(KdTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.Kp)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidTheta.Kp));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.Ki));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidTheta.Ki));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.Kd)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidTheta.Kd));
     //-------------------
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitPX)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.erreurProportionelleMax)); 
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitPTheta)); 
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitIX)); 
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitITheta));

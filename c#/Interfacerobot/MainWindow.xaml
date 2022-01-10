@@ -56,7 +56,7 @@
                         <TextBox x:Name="TextBoxTelemetres" TextWrapping="Wrap" Text="" TextChanged="textBox_TextChanged" Foreground="Black" Background="{x:Null}" BorderBrush="{x:Null}" IsReadOnly="True" />
                     </GroupBox>
                     <GroupBox x:Name="Moteurs" Header="Moteurs" Foreground="Black"  Background="LightGray" BorderBrush="Black" Grid.Column="0" Grid.Row="1" Margin="4,1">
-                        <TextBox x:Name="TextBoxMoteurs" Margin="0,20,0,0" TextWrapping="Wrap" Text="" TextChanged="textBox_TextChanged" Foreground="Black" Background="{x:Null}" BorderBrush="{x:Null}" IsReadOnly="True" />
+                        <TextBox x:Name="TextBoxMoteurs" Margin="0,0,0,0" TextWrapping="Wrap" Text="" TextChanged="textBox_TextChanged" Foreground="Black" Background="{x:Null}" BorderBrush="{x:Null}" IsReadOnly="True" />
                     </GroupBox>
                 </Grid>
                 <Grid Grid.Column="1">
@@ -67,7 +67,7 @@
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Button x:Name="buttonEnvoyer" Content="clear"  Grid.Row="0" Margin="7" Background="Lightgray" Click="buttonEnvoyer_Click"/>
-                    <Button x:Name="buttonTest" Content="Pid Envoi"  Grid.Row="1" Margin="7"  Background="LightGreen" Click="buttonTest_Click" />
+                    <Button x:Name="buttonTest" Content="Pid Envoi"  Grid.Row="1" Margin="7"  Background="LightBlue" Click="buttonTest_Click" />
                     <Button x:Name="buttonControl" Content="Automatique"  Grid.Row="2" Margin="7" Background="Lightgray" Click="buttonControl_Click"/>
                     <Button x:Name="buttonPid" Content="PID"  Grid.Row="3" Margin="7" Background="LightBlue" Click="buttonPid_Click"/>
                 </Grid>

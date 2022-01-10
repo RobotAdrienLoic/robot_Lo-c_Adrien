@@ -92,6 +92,4 @@ void SendPositionData(void)
     getBytesFromFloat ( positionPayload,16,(float)(robotState.vitesseLineaireFromOdometry)) ;
     getBytesFromFloat ( positionPayload,20,(float)(robotState.vitesseAngulaireFromOdometry)) ;
     UartEncodeAndSendMessage (POSITION_DATA,24,positionPayload) ;
-    unsigned char Oscillo[4]={(unsigned char)(timestamp >> 24),(unsigned char)(timestamp >> 16),(unsigned char)(timestamp >> 8),(unsigned char)(timestamp >> 0)};
-    UartEncodeAndSendMessage(0x0083,4,Oscillo);
 }

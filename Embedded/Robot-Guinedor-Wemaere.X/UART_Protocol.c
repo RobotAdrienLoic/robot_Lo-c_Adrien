@@ -11,6 +11,7 @@ int msgDecodedPayloadLength = 0;
 unsigned char msgDecodedPayload[128];
 int msgDecodedPayloadIndex = 0;
 int reset;
+unsigned char receivedChecksum;
 
 typedef enum {
     Waiting,
@@ -21,6 +22,7 @@ typedef enum {
     PayloadLengthLSB,
     Payload,
     CheckSum
+    
 } StateReception;
 
 StateReception rcvState = Waiting;
@@ -109,9 +111,9 @@ void UartDecodeMessage(unsigned char c)
                 rcvState = CheckSum;
             }
         break;
-
-        case CheckSum: ;
-            unsigned char receivedChecksum = c;
+           
+        case CheckSum: 
+            receivedChecksum = c;
             unsigned char calculatedChecksum = UartCalculateChecksum( msgDecodedFunction, msgDecodedPayloadLength, msgDecodedPayload);
             if (calculatedChecksum == receivedChecksum)
             {
@@ -119,10 +121,18 @@ void UartDecodeMessage(unsigned char c)
             }
             rcvState = Waiting;
         break;
+        
+        
+            
+            
 
         default:
             rcvState = Waiting;
         break;
+        
+        
+        
+       
     }
 }
 
@@ -141,6 +151,10 @@ void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLengt
             
         case RESET_ODO:
             reset=1;
+        break;
+        
+        case ASSERVISSEMENT: 
+              
         break;
     }
 }

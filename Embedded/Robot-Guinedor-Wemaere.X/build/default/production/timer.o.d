@@ -1,5 +1,5 @@
 build/default/production/timer.o: timer.c timer.h IO.h PWM.h ADC.h main.h \
- robot.h UART_Protocol.h QEI.h
+ robot.h Asservissement.h UART_Protocol.h QEI.h
 
 timer.h:
 
@@ -12,6 +12,8 @@ ADC.h:
 main.h:
 
 robot.h:
+
+Asservissement.h:
 
 UART_Protocol.h:
 

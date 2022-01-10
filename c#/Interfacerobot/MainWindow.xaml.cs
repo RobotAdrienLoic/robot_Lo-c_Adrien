@@ -33,9 +33,8 @@ namespace Interfacerobot
         Robot robot = new Robot();
         private readonly KeyboardHookListener m_KeyboardHookManager;
 
-        int i;
-        float PositionEnX;
-        float PositionEnY;
+        byte message_pid;
+        
 
         public MainWindow()
         {
@@ -118,7 +117,7 @@ namespace Interfacerobot
             RobotState=0x0050,
             Clavier=0x0053,
             Odometrie=0x0061,
-            Oscillo=0x0083,
+            Asservissement=0x0063
         }
 
         public enum StateRobot
@@ -213,7 +212,12 @@ namespace Interfacerobot
 
                 case StateReception.PayloadLengthLSB:
                     msgDecodedPayloadLength += (byte)(c << 0);
-                    if (msgDecodedPayloadLength != 0)
+                    if (msgDecodedPayloadLength == 0)
+                    {
+                        msgDecodedPayload = new byte[1];
+                        rcvState = StateReception.CheckSum;
+                    }
+                    else if (msgDecodedPayloadLength != 0)
                     {
                         msgDecodedPayload = new byte[msgDecodedPayloadLength];
                         msgDecodedPayloadIndex = 0;
@@ -259,7 +263,7 @@ namespace Interfacerobot
         void ProcessDecodedMessage(int msgFunction, int msgPayloadLength, byte[] msgPayload)
         {
             int numLed, etatLed, IRGauche, IRCentre, IRDroite, MG, MD;
-            float xpos, ypos, angleRadian, vitesseLineaire, vitesseAngulaire ;
+            float xpos, ypos, angleRadian, vitesseLineaire, vitesseAngulaire,temps;
 
             switch((Functions)msgFunction)
             {
@@ -270,33 +274,33 @@ namespace Interfacerobot
                     {
                         if (etatLed == 1)
                         {
-                            CheckBoxLed1.IsChecked = true;
+                            //CheckBoxLed1.IsChecked = true;
                         }
                         else
                         {
-                            CheckBoxLed1.IsChecked = false;
+                            //CheckBoxLed1.IsChecked = false;
                         }
                     }
                     else if (numLed == 2)
                     {
                         if (etatLed == 1)
                         {
-                            CheckBoxLed2.IsChecked = true;
+                            //CheckBoxLed2.IsChecked = true;
                         }
                         else
                         {
-                            CheckBoxLed2.IsChecked = false;
+                            //CheckBoxLed2.IsChecked = false;
                         }
                     }
                     else if (numLed == 3)
                     {
                         if (etatLed == 1)
                         {
-                            CheckBoxLed3.IsChecked = true;
+                            //CheckBoxLed3.IsChecked = true;
                         }
                         else
                         {
-                            CheckBoxLed3.IsChecked = false;
+                            //CheckBoxLed3.IsChecked = false;
                         }
                     }
                 break;
@@ -324,12 +328,12 @@ namespace Interfacerobot
                 break;
 
                 case Functions.Odometrie:
-                    byte[] tab = msgPayload.GetRange(4, 4);
+                    byte[] tab = msgPayload.GetRange(0, 4);
+                    temps = tab.GetFloat();
+                    tab = msgPayload.GetRange(4, 4);
                     xpos = tab.GetFloat();
-                    PositionEnX = xpos;
                     tab = msgPayload.GetRange(8, 4);
                     ypos = tab.GetFloat();
-                    PositionEnY = ypos;
                     tab = msgPayload.GetRange(12, 4);
                     angleRadian = tab.GetFloat();
                     tab = msgPayload.GetRange(16, 4);
@@ -341,13 +345,108 @@ namespace Interfacerobot
                     angleRD.Text = "Angle en radian : " + (angleRadian*180/Math.PI).ToString();
                     vLineaire.Text = "Vitesse linéaire : " + (vitesseLineaire).ToString();
                     vAngulaire.Text = "Vitesse angulaire : " + (vitesseAngulaire).ToString();
+                    //TextBoxReception.Text += "\n\r le temps vaut " + temps;
+                    //oscilloSpeed.AddPointToLine(50, temps,xpos);
                     break;
 
-                case Functions.Oscillo:
-                    int temps = (((int)msgPayload[0]) << 24) + (((int)msgPayload[1]) << 16) + (((int)msgPayload[2]) << 8) + (((int)msgPayload[3]));
-                    oscilloSpeed.AddPointToLine(50, temps, PositionEnX);
-                    oscilloSpeed.AddPointToLine(52, temps, PositionEnY);
-                    //RtbReception.Text = ((StateRobot)(msgPayload[0])).ToString() + "\n\rTemps: " + instant.ToString() + " ms";
+                case Functions.Asservissement:
+                    int nb_octet = 0;
+                    //-------------------
+                    double consigneX;
+                    double consigneTheta;
+                    double valueX;
+                    double valueTheta;
+                    double errorX;
+                    double errorTheta;
+                    double commandX;
+                    double commandTheta;
+                    //-------------------
+                    double corrPX;
+                    double corrPTheta;
+                    double corrIX;
+                    double corrITheta;
+                    double corrDX;
+                    double corrDTheta;
+                    //-------------------
+                    double KpX;
+                    double KpTheta;
+                    double KiX;
+                    double KiTheta;
+                    double KdX;
+                    double KdTheta;
+                    //-------------------
+                    double corrLimitPX;
+                    double corrLimitPTheta;
+                    double corrLimitIX;
+                    double corrLimitITheta;
+                    double corrLimitDX;
+                    double corrLimitDTheta;
+                    //------------------- Récupération des valeurs
+                    byte[] tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    consigneX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    consigneTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    valueX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    valueTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    errorX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    errorTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    commandX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    commandTheta = tabl.GetFloat();
+                    //------------------- 
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrPX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrPTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrIX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrITheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrDX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrDTheta = tabl.GetFloat();
+                    //-------------------
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KpX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KpTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KiX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KiTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KdX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    KdTheta = tabl.GetFloat();
+                    //-------------------
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitPX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitPTheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitIX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitITheta = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitDX = tabl.GetFloat();
+                    tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
+                    corrLimitDTheta = tabl.GetFloat();
+
+                    asservSpeedDisplay.UpdatePolarOdometrySpeed(valueX, valueTheta);
+
+                    asservSpeedDisplay.UpdatePolarSpeedConsigneValues(consigneX, consigneTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCommandValues(commandX, commandTheta);
+                    
+                    asservSpeedDisplay.UpdatePolarSpeedErrorValues(errorX, errorTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionValues(corrPX, corrPTheta, corrIX, corrITheta, corrDX, corrDTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionGains(KpX, KpTheta, KiX, KiTheta, KdX, KdTheta);
+                    asservSpeedDisplay.UpdatePolarSpeedCorrectionLimits(corrLimitPX, corrLimitPTheta, corrLimitIX, corrLimitITheta, corrLimitDX, corrLimitDTheta);
                     break;
 
             }
@@ -389,7 +488,6 @@ namespace Interfacerobot
         #region Boutons 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e) 
         {
-
         }
 
         private void buttonEnvoyer_Click(object sender, RoutedEventArgs e)
@@ -411,19 +509,34 @@ namespace Interfacerobot
 
         private void buttonTest_Click(object sender, RoutedEventArgs e)
         {
-            byte[] message = Encoding.ASCII.GetBytes("Bonjour");
+            // byte[] message = Encoding.ASCII.GetBytes("Bonjour");
 
-           // ProcessDecodedMessage(0x0020, 2, new byte[] { 3,1 });
-           UartEncodeAndSendMessage(0x0020, 2, new byte[] { 3, 1 });   //led 3 true
-           UartEncodeAndSendMessage(0x0030, 3, new byte[] { 25, 30, 25 });  //IR 25cm 30cm 25cm
-           UartEncodeAndSendMessage(0x0040, 2, new byte[] { 41, 38 });  // Moteur1 41% Moteur2 38%
-           //UartEncodeAndSendMessage(0x0080, 7, message);
-           UartEncodeAndSendMessage(0x0020, 2, new byte[] { 1, 1 });   //led 1 true
-           UartEncodeAndSendMessage(0x0020, 2, new byte[] { 2, 1 });   //led 2 true        
-           // UartEncodeAndSendMessage(0x0080, (UInt16)message.Length, message);
-            UartEncodeAndSendMessage(0x0053, 1, new byte[] { 4 });
-            UartEncodeAndSendMessage(0x0050, 5, new byte[] { 2, 0, 0, 0, 10 });
-            UartEncodeAndSendMessage(0x0061, 5, new byte[] { 0, 0, 0, 0, 0 });
+            //// ProcessDecodedMessage(0x0020, 2, new byte[] { 3,1 });
+            //UartEncodeAndSendMessage(0x0020, 2, new byte[] { 3, 1 });   //led 3 true
+            //UartEncodeAndSendMessage(0x0030, 3, new byte[] { 25, 30, 25 });  //IR 25cm 30cm 25cm
+            //UartEncodeAndSendMessage(0x0040, 2, new byte[] { 41, 38 });  // Moteur1 41% Moteur2 38%
+            ////UartEncodeAndSendMessage(0x0080, 7, message);
+            //UartEncodeAndSendMessage(0x0020, 2, new byte[] { 1, 1 });   //led 1 true
+            //UartEncodeAndSendMessage(0x0020, 2, new byte[] { 2, 1 });   //led 2 true        
+            //// UartEncodeAndSendMessage(0x0080, (UInt16)message.Length, message);
+            // UartEncodeAndSendMessage(0x0053, 1, new byte[] { 4 });
+            // UartEncodeAndSendMessage(0x0050, 5, new byte[] { 2, 0, 0, 0, 10 });
+            // UartEncodeAndSendMessage(0x0061, 5, new byte[] { 0, 0, 0, 0, 0 });
+
+
+           byte [] correcteur = new byte[28];
+
+
+            correcteur.SetValueRange(((float)(message_pid)).GetBytes(), 0);
+            correcteur.SetValueRange(((float)(Convert.ToDecimal(Kp.Text))).GetBytes(), 4);
+            correcteur.SetValueRange(((float)(Convert.ToDecimal(Ki.Text))).GetBytes(), 8);
+            correcteur.SetValueRange(((float)(Convert.ToDecimal(Kd.Text))).GetBytes(), 12);
+            correcteur.SetValueRange(((float)(Convert.ToDecimal(proportionnelleMax.Text))).GetBytes(), 16);
+            correcteur.SetValueRange(((float)(Convert.ToDecimal(integralMax.Text))).GetBytes(), 20);
+            correcteur.SetValueRange(((float)(Convert.ToDecimal(deriveeMax.Text))).GetBytes(), 24);
+
+            UartEncodeAndSendMessage(0x0063, correcteur.Length, correcteur);
+
         }
 
         private void TextBoxEmission_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
@@ -435,6 +548,25 @@ namespace Interfacerobot
                 byte[] array = Encoding.ASCII.GetBytes(message);
                 UartEncodeAndSendMessage(0x0080, (UInt16)array.Length, array);
                 TextBoxEmission.Text = "";
+            }
+        }
+
+        bool choix_pid = true;
+        private void buttonPid_Click(object sender, RoutedEventArgs e)
+        {
+            if (!choix_pid)
+            {
+                buttonPid.Content = "Pid X";
+                message_pid = 1; //PidX
+
+                choix_pid = true;
+            }
+            else
+            {
+                buttonPid.Content = "Pid T";
+                message_pid = 0; //PidTheta
+
+                choix_pid = false;
             }
         }
 

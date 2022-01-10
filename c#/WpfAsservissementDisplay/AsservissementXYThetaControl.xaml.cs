@@ -24,7 +24,7 @@ namespace WpfAsservissementDisplay
     /// 
     public partial class AsservissementXYThetaControl : UserControl
     {
-        /*int queueSize = 1;
+        int queueSize = 1;
         FixedSizedQueue<double> commandXList;
         FixedSizedQueue<double> commandThetaList;
         FixedSizedQueue<double> commandM1List;
@@ -66,13 +66,13 @@ namespace WpfAsservissementDisplay
         double KiX, KiTheta, KiM1, KiM2;
         double KdX, KdTheta, KdM1, KdM2;
 
-        System.Timers.Timer displayTimer;*/
+        System.Timers.Timer displayTimer;
 
         public AsservissementXYThetaControl()
         {
             InitializeComponent();
 
-            /*  commandXList = new Utilities.FixedSizedQueue<double>(queueSize);
+              commandXList = new Utilities.FixedSizedQueue<double>(queueSize);
               commandThetaList = new Utilities.FixedSizedQueue<double>(queueSize);
               commandM1List = new Utilities.FixedSizedQueue<double>(queueSize);
               commandM2List = new Utilities.FixedSizedQueue<double>(queueSize);
@@ -328,7 +328,7 @@ namespace WpfAsservissementDisplay
               this.corrLimitIM2 = corrLimitIM2;
               this.corrLimitDM1 = corrLimitDM1;
               this.corrLimitDM2 = corrLimitDM2;
-          }*/
+          }
         }
     }
-}
+

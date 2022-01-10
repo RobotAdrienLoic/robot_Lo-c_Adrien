@@ -7,6 +7,7 @@
 #include "robot.h"
 #include "UART_Protocol.h"
 #include "QEI.h"
+#include "Asservissement.h"
 // Initialisation d?un timer 32 bits
 unsigned long timestamp;
 
@@ -88,9 +89,12 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
         UartEncodeAndSendMessage(0x0020, 2, LED1);
         UartEncodeAndSendMessage(0x0020, 2, LED2);
         UartEncodeAndSendMessage(0x0020, 2, LED3);
+        unsigned char IR[] = {robotState.distanceTelemetreDroit,robotState.distanceTelemetreCentre,robotState.distanceTelemetreGauche};
+        UartEncodeAndSendMessage(0x0030,3,IR);
         //unsigned char message [ ] = {'B','o','n','j','o','u','r'};
         //UartEncodeAndSendMessage(0x0080, 7, message);
         SendPositionData();
+        AsservissementValeur();
     }
     
     //LED_BLANCHE = !LED_BLANCHE; 

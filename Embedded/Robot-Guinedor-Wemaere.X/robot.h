@@ -29,7 +29,7 @@ typedef struct robotStateBITS {
             
             // Asservissement
             PidCorrector PidX;
-            PidCorrector PIdTheta;
+            PidCorrector PidTheta;
             
             //Commandes pour le moteur 
             double vitesseAngulairePourcent;
@@ -40,8 +40,7 @@ typedef struct robotStateBITS {
             double vitesseAngulaireConsigne;
             double xCorrectionVitessePourcent;
             double thetaCorrectionVitessePourcent;
-            
-            
+
         }
         ;
     }

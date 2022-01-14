@@ -7,6 +7,8 @@
 #include "IO.h"
 #include "Asservissement.h"
 #include "QEI.h"
+#include "Utilities.h"
+#include "robot.h"
 
 int msgDecodedFunction = 0;
 int msgDecodedPayloadLength = 0;
@@ -158,19 +160,20 @@ void UartProcessDecodedMessage(unsigned char function,unsigned char payloadLengt
         break;
         
         case ASSERVISSEMENT: 
-            model = getDouble(payload, 0);
-            Kp = getDouble(payload, 4);
+            model = getFloat(payload, 0);
+            Kp = getFloat(payload, 4);
             Ki = getDouble(payload, 8);
             Kd = getDouble(payload, 12);
             KpMax = getDouble(payload, 16);
             KiMax = getDouble(payload, 20);
             KdMax = getDouble(payload, 24);
             
+            
             if (model == 1) {
-                SetupPidAsservissement(&PidX, Kp, Ki, Kd, KpMax, KiMax, KdMax);
+                SetupPidAsservissement(&robotState.PidX, Kp, Ki, Kd, KpMax, KiMax, KdMax);
             } 
             else if (model == 0) {
-                SetupPidAsservissement(&PidTheta, Kp, Ki, Kd, KpMax, KiMax, KdMax);
+                SetupPidAsservissement(&robotState.PidTheta, Kp, Ki, Kd, KpMax, KiMax, KdMax);
             }
             
         break;

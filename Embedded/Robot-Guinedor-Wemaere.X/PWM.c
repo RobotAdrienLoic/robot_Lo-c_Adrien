@@ -3,10 +3,13 @@
 #include "PWM.h"
 #include "Robot.h"
 #include "ToolBox.h"
+#include "QEI.h"
+#include "Asservissement.h"
+#include "Utilities.h"
 
 #define PWMPER 40.0
 float acceleration=15;
-
+float sens = 1;
 void InitPWM(void)
 {
 PTCON2bits.PCLKDIV = 0b000; //Divide by 1
@@ -112,6 +115,7 @@ MOTEUR_GAUCHE_L_PWM_ENABLE = 1; //Pilotage de la pin en mode PWM
 }
 MOTEUR_GAUCHE_DUTY_CYCLE = Abs1(robotState.vitesseGaucheCommandeCourante) * PWMPER;
 }
+
 void PWMSetSpeedConsigne(float vitesseEnpourcents, int moteur)
 {
     if(moteur==0)
@@ -122,4 +126,29 @@ void PWMSetSpeedConsigne(float vitesseEnpourcents, int moteur)
     {
        robotState.vitesseGaucheConsigne=vitesseEnpourcents; 
     }
+}
+
+void PWMSetSpeedConsignePolaire() {
+    /********************** Correction Angulaire **********************/
+    robotState.vitesseAngulairePourcent = robotState.PidTheta.command * COEFF_VITESSE_ANGULAIRE_PERCENT;
+    //robotState.vitesseAngulairePourcent = robotState.PidTheta.consigne * COEFF_VITESSE_ANGULAIRE_PERCENT;
+
+    /********************** Correction Lineaire *****************************/
+    robotState.vitesseLineairePourcent = robotState.PidX.command * COEFF_VITESSE_LINEAIRE_PERCENT;
+    //robotState.vitesseLineairePourcent = robotState.PidX.consigne * COEFF_VITESSE_LINEAIRE_PERCENT;
+
+    /************* Génération des consignes droites et gauches ******************/
+    robotState.vitesseDroiteConsigne = sens*(robotState.vitesseLineairePourcent + robotState.vitesseAngulairePourcent * DISTROUES / 2);
+    robotState.vitesseDroiteConsigne = LimitToInterval(robotState.vitesseDroiteConsigne, -100, 100);
+    robotState.vitesseGaucheConsigne = sens*(robotState.vitesseLineairePourcent - robotState.vitesseAngulairePourcent * DISTROUES / 2);
+    robotState.vitesseGaucheConsigne = LimitToInterval(robotState.vitesseGaucheConsigne, -100, 100);
+}
+
+void UpdateAsservissement(){
+    robotState.PidX.erreur = robotState.PidX.consigne - robotState.vitesseLineaireFromOdometry;
+    //robotState.PidX.erreur = 0; //seulement pour le réglage de l'asservissesement en angulaire
+    robotState.PidTheta.erreur = robotState.PidTheta.consigne - robotState.vitesseAngulaireFromOdometry;
+    
+    robotState.PidX.command = Correcteur(&robotState.PidX, robotState.PidX.erreur);
+    robotState.PidTheta.command = Correcteur(&robotState.PidTheta, robotState.PidTheta.erreur);  
 }

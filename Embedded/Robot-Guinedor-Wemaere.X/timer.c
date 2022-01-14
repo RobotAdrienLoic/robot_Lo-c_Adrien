@@ -8,6 +8,8 @@
 #include "UART_Protocol.h"
 #include "QEI.h"
 #include "Asservissement.h"
+#include "Utilities.h"
+
 // Initialisation d?un timer 32 bits
 unsigned long timestamp;
 
@@ -79,9 +81,14 @@ int Sous_echantillonnage = 0;
 void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
     IFS0bits.T1IF = 0;
     ADC1StartConversionSequence();
+    
+    QEIUpdateData();
+    UpdateAsservissement();
+    PWMSetSpeedConsignePolaire();
     PWMUpdateSpeed();
+    
     if (Sous_echantillonnage++ % 10 == 0) {
-        unsigned char MOTEUR[] = {MOTEUR_GAUCHE_DUTY_CYCLE/40,MOTEUR_DROIT_DUTY_CYCLE/40} ;
+        /*unsigned char MOTEUR[] = {MOTEUR_GAUCHE_DUTY_CYCLE/40,MOTEUR_DROIT_DUTY_CYCLE/40} ;
         unsigned char LED1[] = {1, LED_ORANGE};
         unsigned char LED2[] = {2, LED_BLEUE};
         unsigned char LED3[] = {3, LED_BLANCHE};
@@ -90,11 +97,11 @@ void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
         UartEncodeAndSendMessage(0x0020, 2, LED2);
         UartEncodeAndSendMessage(0x0020, 2, LED3);
         unsigned char IR[] = {robotState.distanceTelemetreDroit,robotState.distanceTelemetreCentre,robotState.distanceTelemetreGauche};
-        UartEncodeAndSendMessage(0x0030,3,IR);
+        UartEncodeAndSendMessage(0x0030,3,IR);*/
         //unsigned char message [ ] = {'B','o','n','j','o','u','r'};
         //UartEncodeAndSendMessage(0x0080, 7, message);
         SendPositionData();
-        AsservissementValeur();
+        AsservissementValeur();   
     }
     
     //LED_BLANCHE = !LED_BLANCHE; 

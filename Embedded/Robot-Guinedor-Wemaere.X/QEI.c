@@ -6,9 +6,7 @@
 #include "timer.h"
 #include "UART_Protocol.h"
 
-#define DISTROUES 217
-#define FREQ_ECH_QEI 250
-#define POSITION_DATA 0x0061
+
 
 double QeiDroitPosition_T_1,QeiGauchePosition_T_1,QeiDroitPosition,QeiGauchePosition,delta_d,delta_g,delta_theta ,dx;
 
@@ -33,12 +31,6 @@ void QEIUpdateData(void)
      // on sauvgarde les anciennes valeurs 
     QeiDroitPosition_T_1 = QeiDroitPosition;
     QeiGauchePosition_T_1 = QeiGauchePosition;
-    
-    if(reset==1)
-    {
-        QeiDroitPosition_T_1 = 0;
-        QeiGauchePosition_T_1 = 0;
-    }
 
     //On réactualise les valeurs des positions
     long QEI1RawValue =POS1CNTL;
@@ -48,8 +40,8 @@ void QEIUpdateData(void)
     QEI2RawValue+=((long)POS2HLD<<16);
 
     // Conversion en mm ( r\ 'egl \ 'e pour la taille des roues codeuses )
-    QeiDroitPosition = 0.01620*QEI1RawValue ;
-    QeiGauchePosition = -0.01620*QEI2RawValue;
+    QeiDroitPosition = point_meter*QEI1RawValue ;
+    QeiGauchePosition = -point_meter*QEI2RawValue;
 
     //calcul des deltas de positions
     delta_d = QeiDroitPosition - QeiDroitPosition_T_1; 

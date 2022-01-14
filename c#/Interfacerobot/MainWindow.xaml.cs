@@ -438,17 +438,17 @@ namespace Interfacerobot
                     tabl = msgPayload.GetRange(nb_octet, 4); nb_octet = nb_octet + 4;
                     corrLimitDTheta = tabl.GetFloat();
 
-                    asservSpeedDisplay.UpdatePolarOdometrySpeed(valueX, valueTheta);
-
                     asservSpeedDisplay.UpdatePolarSpeedConsigneValues(consigneX, consigneTheta);
+                    asservSpeedDisplay.UpdatePolarOdometrySpeed(valueX, valueTheta);
                     asservSpeedDisplay.UpdatePolarSpeedCommandValues(commandX, commandTheta);
-                    
                     asservSpeedDisplay.UpdatePolarSpeedErrorValues(errorX, errorTheta);
+
                     asservSpeedDisplay.UpdatePolarSpeedCorrectionValues(corrPX, corrPTheta, corrIX, corrITheta, corrDX, corrDTheta);
+
                     asservSpeedDisplay.UpdatePolarSpeedCorrectionGains(KpX, KpTheta, KiX, KiTheta, KdX, KdTheta);
+
                     asservSpeedDisplay.UpdatePolarSpeedCorrectionLimits(corrLimitPX, corrLimitPTheta, corrLimitIX, corrLimitITheta, corrLimitDX, corrLimitDTheta);
                     break;
-
             }
         }
 
@@ -526,7 +526,6 @@ namespace Interfacerobot
 
            byte [] correcteur = new byte[28];
 
-
             correcteur.SetValueRange(((float)(message_pid)).GetBytes(), 0);
             correcteur.SetValueRange(((float)(Convert.ToDecimal(Kp.Text))).GetBytes(), 4);
             correcteur.SetValueRange(((float)(Convert.ToDecimal(Ki.Text))).GetBytes(), 8);
@@ -536,8 +535,11 @@ namespace Interfacerobot
             correcteur.SetValueRange(((float)(Convert.ToDecimal(deriveeMax.Text))).GetBytes(), 24);
 
             UartEncodeAndSendMessage(0x0063, correcteur.Length, correcteur);
-
-        }
+            // KP X = 3,325
+            // KP Theta = 3,5
+            // Ki X = 74
+            // Ki Theta = 87
+         }
 
         private void TextBoxEmission_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {

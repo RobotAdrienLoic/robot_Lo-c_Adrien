@@ -95,8 +95,6 @@ int main(void)
             UartDecodeMessage(message);
             //SendMessage(&message, 1 ) ;
         }
-        
-        QEIUpdateData();
     }
     return (EXIT_SUCCESS);
 }

@@ -5,13 +5,11 @@
 #include "asservissement.h"
 #include "UART_Protocol.h"
 #include "Toolbox.h"
-#include "Robot.h"
+#include "robot.h"
 #include "QEI.h"
 #include "timer.h"
 #include "Utilities.h"
 
-PidCorrector PidX;
-PidCorrector PidTheta;
 
 unsigned char asservissementPayload [104];
 
@@ -58,35 +56,53 @@ PidCorr -> erreurDeriveeMax = deriveeMax ;
 void AsservissementValeur(){
     //-------------------
     int nb_octet = 0;
-    getBytesFromFloat(asservissementPayload,nb_octet, (float)(consigneX)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(consigneTheta));
+    getBytesFromFloat(asservissementPayload,nb_octet, (float)(robotState.PidX.consigne)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.consigne));
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.vitesseLineaireFromOdometry)); 
     getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.vitesseAngulaireFromOdometry)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(errorX));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(errorTheta)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(commandX));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(commandTheta)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.erreur));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.erreur)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.command));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.command)); 
     //-------------------   
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrPX));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrPTheta));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrIX));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrITheta));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrDX));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrDTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.corrP));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.corrP));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.corrI));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.corrI));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.corrD));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.corrD));
     //-------------------
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.Kp)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidTheta.Kp));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.Ki));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidTheta.Ki));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.Kd)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidTheta.Kd));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.Kp)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.Kp));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.Ki));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.Ki));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.Kd)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.Kd));
     //-------------------
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(PidX.erreurProportionelleMax)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitPTheta)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitIX)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitITheta));
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitDX)); 
-    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(corrLimitDTheta));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.erreurProportionelleMax)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.erreurProportionelleMax)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.erreurIntegraleMax)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.erreurIntegraleMax));
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidX.erreurDeriveeMax)); 
+    getBytesFromFloat(asservissementPayload, nb_octet += 4, (float)(robotState.PidTheta.erreurDeriveeMax));
 
     UartEncodeAndSendMessage(0x0075, nb_octet +=4, asservissementPayload);
+}
+
+double Correcteur(volatile PidCorrector* PidCorr,double erreur){
+    
+    PidCorr ->erreur = erreur;
+    double erreurProportionnelle = LimitToInterval(erreur, -PidCorr->erreurProportionelleMax/PidCorr->Kp, PidCorr->erreurProportionelleMax/PidCorr->Kp);
+    PidCorr -> corrP = PidCorr-> Kp *erreurProportionnelle;
+    
+    PidCorr->erreurIntegrale += erreur / FREQ_ECH_QEI;
+    PidCorr->erreurIntegrale = LimitToInterval(PidCorr->erreurIntegrale, -PidCorr->erreurIntegraleMax/PidCorr->Ki, PidCorr->erreurIntegraleMax/PidCorr->Ki);
+    PidCorr->corrI = PidCorr->erreurIntegrale * PidCorr->Ki;
+  
+    double erreurDerivee = (erreur - PidCorr->epsilon_1) * FREQ_ECH_QEI;
+    double deriveeBornee = LimitToInterval(erreurDerivee, -PidCorr->erreurDeriveeMax/PidCorr->Kd, PidCorr->erreurDeriveeMax/PidCorr->Kd);
+    PidCorr->epsilon_1 = erreur;
+    PidCorr->corrD = PidCorr->Kd * deriveeBornee;
+    
+    return PidCorr->corrP + PidCorr->corrI + PidCorr->corrD;
 }
